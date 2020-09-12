@@ -1,0 +1,51 @@
+name: StayHome # The name of the App
+options: # Some general settings for the projectproject.yml
+  minimumXcodeGenVersion: 2.14.0
+  createIntermediateGroups: true # If the folders are nested, also nest the groups in Xcode
+  indentWidth: 2 # indent by 2 spaces
+  tabWidth: 2 # a tab is 2 spaces
+  bundleIdPrefix: "kr.co.gunter"
+configs:
+  Debug: debug
+  Release: release
+targets:
+  StayHome:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: kr.co.gunter
+      INFOPLIST_FILE: StayHome/Supporting Files/Info.plist
+    sources:
+      - path: Sources
+      - path: Resources
+      - path: Supporting Files
+        excludes:
+          - Info.plist
+    sources:  
+      - path: StayHome
+    scheme: 
+      testTargets:
+        - StayHomeTests
+      gatherCoverageData: true
+    settings:
+      OTHER_LDFLAGS: $(inherited) -all_load
+    preBuildScripts:
+      - name: SwiftLint
+        script: |
+                ${PODS_ROOT}/SwiftLint/swiftlint --config .swiftlint.yml
+  StayHomeTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "13.0"
+    settings:
+      INFOPLIST_FILE: StayHomeTests/Info.plist
+    sources:
+      - path: StayHomeTests
+    dependencies:
+      - target: StayHome
+    scheme: 
+      testTargets:
+        - StayHome
+        - StayHomeTests
+      gatherCoverageData: true
